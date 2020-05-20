@@ -1,0 +1,13 @@
+(in-microtheory "KioskFriendMt")
+
+(<== (suggestedField ?faculty "AI and Cognitive Science")
+     (nuGroupMember NUCognitiveSystems ?faculty))
+(<== (suggestedField ?faculty "Engineering and Systems")
+     (nuGroupMember NUComputerEngineeringAndSystems ?faculty))
+(<== (suggestedField ?faculty "Signals and Systems")
+     (nuGroupMember NUSignalsAndSystems ?faculty))
+(<== (suggestedField ?faculty "Algorithms and Applications")
+     (nuGroupMember NUComputingAlgorithmsAndApplications ?faculty))
+(<== (suggestedField ?faculty "Graphics and HCI")
+     (nuGroupMember NUGraphicsAndInteractiveMedia ?faculty))
+
