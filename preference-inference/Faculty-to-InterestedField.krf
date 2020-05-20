@@ -1,4 +1,4 @@
-(in-microtheory "KioskFriendMt")
+(in-microtheory KioskFriendMt)
 
 (<== (suggestedField ?faculty NUCognitiveSystems "AI and Cognitive Science")
      (nuGroupMember NUCognitiveSystems ?faculty))
