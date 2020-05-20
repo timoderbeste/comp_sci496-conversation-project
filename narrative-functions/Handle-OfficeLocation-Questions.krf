@@ -1,0 +1,57 @@
+(in-microtheory KioskFriendMt)
+(queryForInterpretation 0
+			(narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+					   ?faculty-name
+					   InquiringOfficeLocationEvent))
+
+(isa InquiringOfficeLocationEvent Collection)
+(isa InquiringOfficeLocationEvent TemporalObjectType)
+(genls InquiringOfficeLocationEvent RequestingInformation)
+(comment InquiringOfficeLocationEvent
+	 "")
+
+(isa asksForFacultyLocation Predicate)
+(arity asksForFacultyLocation 2)
+(arg1Isa asksForFacultyLocation IBTGeneration)
+(arg2Isa asksForFacultyLocation Thing)
+(comment asksForFacultyLocation
+	 "")
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+			?faculty-name InquiringOfficeLocationEvent)
+     (initiatesOfficeLocationInquiry ?sid ?faculty-name)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (groundExpression ?faculty-name))))
+
+(<== (asksForFacultyLocation ?sid ?faculty-name)
+     (ist-Information (DrsCaseFn ?sid)
+		      (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))
+     (sentenceAskLocation ?sdrs-id ?faculty-name))
+
+(isa sentenceAskLocation Predicate)
+(arity sentenceAskLocation 2)
+(arg1Isa sentenceAskLocation CycLTerm)
+(arg2Isa sentenceAskLocation Thing)
+(arg3Isa sentenceAskLocation Thing)
+(comment sentenceAskLocation
+	 "")
+
+(<== (sentenceAskLocation ?sdrs-id ?faculty-name)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+		      (fe_event ?faculty-name))
+     (possibleFacultyName ?faculty-name))
+
+(isa possibleFacultyName Predicate)
+(arity possibleFacultyName 1)
+(arg1Isa possibleFacultyName Thing)
+(comment possibleFacultyName "")
+
+(<== (possibleFacultyName ?faculty-name)
+     (kbOnly
+      (useTransitiveInference
+       (ist-Information (SocialModelMtFn ?faculty-name)
+			(isa NUPerson))
+       (ist-Information PeopleDataMt
+			(isa ?faculty-name AcademicProfessional)))))
