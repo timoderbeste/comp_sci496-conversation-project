@@ -1,0 +1,122 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: interstellar-trader.krf
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: April 22, 2020 16:12:08
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 04/23/2020 10:59:48 $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+(isa KioskFriendManagerMt Microtheory)
+
+;;; Starting and Ending it
+;;;
+;;; Kiosk Friend is implemented on top of the Companion
+;;; Interaction Manager domain.  It uses narrative function 
+;;; handlers to extract game-specific semantics from general processing.
+;;; These commands in the Commands tab of the Companion WebUI do the trick:
+;;; (achieve :receiver interaction-manager :content (startKioskFriend)) to start
+;;; (achieve :receiver interaction-manager :content (endKioskFriend)) to end
+
+(isa kioskFriendActive Predicate)
+(arity kioskFriendActive 0)
+(comment kioskFriendActive 
+  "(kioskFriendActive) holds when the Interaction Manager is being used to
+   implement the Kiosk Friend game.")
+
+(isa startKioskFriend ComplexActionPredicate)
+(arity startKioskFriend 0)
+(comment startKioskFriend
+  "(startKioskFriend) tweaks the Interaction Manager to use semantic 
+   interpretation methods that implement the Kiosk Friend game.")
+
+(preconditionForMethod 
+ (true)
+ (methodForAction
+  (startKioskFriend)
+  (actionSequence
+   (TheList 
+    (doRecordMembers
+     (TheSet
+      (ist-Information Interaction-ManagerMt
+        (<== (preferInContext
+              (checkUnderstanding ?context ?sid
+                                  ?discourse)
+              ?seq1 ?seq2)
+             (containsPattern (checkITUnderstanding ?context ?sid ?discourse)
+                              ?seq1)))
+      (kioskFriendActive)
+      (genlMt Interaction-ManagerMt KioskFriendMt)
+      (doAnnounce "Starting Kiosk Friend")))))))
+
+(isa endKioskFriend ComplexActionPredicate)
+(arity endKioskFriend 0)
+(comment endKioskFriend
+  "(endKioskFriend) tweaks the Interaction Manager to use semantic 
+   interpretation methods that implement the Kiosk Friend game.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (endKioskFriend)
+  (actionSequence
+   (TheList 
+    (doForgetMembers
+     (TheSet
+      (ist-Information Interaction-ManagerMt
+        (<== (preferInContext
+              (checkUnderstanding ?context ?sid
+                                  ?discourse)
+              ?seq1 ?seq2)
+             (containsPattern (checkITUnderstanding ?context ?sid ?discourse)
+                              ?seq1)))
+      (kioskFriendActive)
+      (genlMt Interaction-ManagerMt KioskFriendMt)
+      (doAnnounce "Shutting down Kiosk Friend")))
+    ))))
+
+(isa checkITUnderstanding ComplexActionPredicate)
+(arity checkITUnderstanding 3)
+(arg1Isa checkITUnderstanding Microtheory)
+(arg2Isa checkITUnderstanding CycLTerm)
+(arg3Isa checkITUnderstanding Microtheory)
+(comment checkITUnderstanding
+  "(checkITUnderstanding ?context ?sid ?discourse) does the semantic analysis
+   needed to recognize dialogue acts and domain semantics for the Interstellar
+   Trader game.")
+
+;;; Dispatch to checkITUnderstanding if the game is active.
+(preconditionForMethod 
+ (kioskFriendActive)
+ (methodForAction
+  (checkUnderstanding ?context ?sid ?discourse)
+  (actionSequence
+   (TheList
+    (doAnnounce "Using Kiosk Friend methods.")
+    (checkITUnderstanding ?context ?sid ?discourse)))))
+
+(preconditionForMethod 
+ (and (kioskFriendActive)
+      (outsourcedOnly (currentDiscourseId ?d-id))
+      (ist-Information (DiscourseCaseFn ?d-id)
+        (sentenceInDiscourse ?sid ?s-index ?wordslist))
+      (evaluate ?next-index (PlusFn 1 ?s-index)))
+ (methodForAction 
+  (checkITUnderstanding ?context ?sid ?discourse)
+  (actionSequence
+   (TheList 
+    (doAnnounce "Running Kiosk Friend narrative functions.")
+    (doEADiscourseInterpretation
+     KioskFriend-NFMt ?s-index ?next-index)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

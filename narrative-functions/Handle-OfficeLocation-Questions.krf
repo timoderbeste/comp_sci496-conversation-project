@@ -40,8 +40,8 @@
 
 (<== (sentenceAskLocation ?sdrs-id ?faculty-name)
      (ist-Information (DrsCaseFn ?sdrs-id)
-		      (fe_event ?faculty-name))
-     (possibleFacultyName ?faculty-name))
+		      (properNameReference ?faculty-name)
+     (possibleFacultyName ?faculty-name)))
 
 (isa possibleFacultyName Predicate)
 (arity possibleFacultyName 1)
