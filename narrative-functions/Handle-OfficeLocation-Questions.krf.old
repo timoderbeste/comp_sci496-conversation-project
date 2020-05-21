@@ -2,7 +2,7 @@
 
 (queryForInterpretation 0
 			(narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
-					   ?suggested-field
+					   ?faculty-name
 					   InquiringOfficeLocationEvent))
 
 (isa InquiringOfficeLocationEvent Collection)
@@ -19,30 +19,30 @@
 	 "")
 
 (<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
-			?suggested-field InquiringOfficeLocationEvent)
-     (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+			?faculty-name InquiringOfficeLocationEvent)
+     (initiatesOfficeLocationInquiry ?sid ?faculty-name)
      (individualSatisfyingConditions
       ?event-id IBTGeneration
       (TheSet (groundExpression ?faculty-name))))
 
-(<== (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+(<== (asksForFacultyLocation ?sid ?faculty-name)
      (ist-Information (DrsCaseFn ?sid)
 		      (discourseCaseForDrs ?dcase ?sid))
      (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))
-     (sentenceAskLocation ?sdrs-id ?faculty-name)
-     (suggestedField ?faculty-name ?group-name ?suggested-field))
+     (sentenceAskLocation ?sdrs-id ?faculty-name))
 
 (isa sentenceAskLocation Predicate)
-(arity sentenceAskLocation 3)
+(arity sentenceAskLocation 2)
 (arg1Isa sentenceAskLocation CycLTerm)
 (arg2Isa sentenceAskLocation Thing)
 (arg3Isa sentenceAskLocation Thing)
-(comment sentenceAskLocation "")
+(comment sentenceAskLocation
+	 "")
 
 (<== (sentenceAskLocation ?sdrs-id ?faculty-name)
      (ist-Information (DrsCaseFn ?sdrs-id)
-		      (possessiveRelation ?faculty-name ?office-loc))
-     (possibleFacultyName ?faculty-name))
+		      (properNameReference ?faculty-name)
+     (possibleFacultyName ?faculty-name)))
 
 (isa possibleFacultyName Predicate)
 (arity possibleFacultyName 1)
@@ -53,6 +53,6 @@
      (kbOnly
       (useTransitiveInference
        (ist-Information (SocialModelMtFn ?faculty-name)
-			(isa ?faculty-name NUPerson))
+			(isa NUPerson))
        (ist-Information PeopleDataMt
 			(isa ?faculty-name AcademicProfessional)))))

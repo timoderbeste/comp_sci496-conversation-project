@@ -51,7 +51,7 @@
              (containsPattern (checkITUnderstanding ?context ?sid ?discourse)
                               ?seq1)))
       (kioskFriendActive)
-      (genlMt Interaction-ManagerMt KioskFriendMt)))
+      (genlMt Interaction-ManagerMt KioskFriendManagerMt)))
       (doAnnounce "Starting Kiosk Friend")))))
 
 (isa endKioskFriend ComplexActionPredicate)
@@ -76,7 +76,7 @@
              (containsPattern (checkITUnderstanding ?context ?sid ?discourse)
                               ?seq1)))
       (kioskFriendActive)
-      (genlMt Interaction-ManagerMt KioskFriendMt)))
+      (genlMt Interaction-ManagerMt KioskFriendManagerMt)))
       (doAnnounce "Shutting down Kiosk Friend")))))
 
 (isa checkITUnderstanding ComplexActionPredicate)
@@ -111,7 +111,7 @@
    (TheList 
     (doAnnounce "Running Kiosk Friend narrative functions.")
     (doEADiscourseInterpretation
-     KioskFriend-NFMt ?s-index ?next-index)))))
+     KioskFriendMt ?s-index ?next-index)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
