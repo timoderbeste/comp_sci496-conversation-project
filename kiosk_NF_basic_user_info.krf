@@ -1,0 +1,56 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: kiosk_NF_basic_user_info.krf
+;;;;    System: Companions
+;;;;    Author: Chenghong Lin
+;;;;   Created: May 21, 2020 11:36:17
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-27 12:08:59 -0500 (Thu, 27 Sep 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+;(in-microtheory KioskFriendBasicInfoMt)
+(in-microtheory InterstellarTrader-NFMt)
+
+(queryForInterpretation 0
+                        (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                                           ?suggested-field
+                                           InquiringBasicInfoEvent))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?user-info InquiringBasicInfoEvent)
+     (getUserInfo ?sid ?user-info)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (groundExpression ?user-info))))
+
+(isa getUserInfo Predicate)
+(arity getUserInfo 2)
+(isa grabUserMajor Predicate)
+(arity grabUserMajor 2)
+(isa grabUserGrade Predicate)
+(arity grabUserGrade 2)
+(isa userInfoWGrade Predicate)
+(arity userInfoWGrade 2)
+
+(<== (getUserInfo ?sid (userInfoWGrade ?major ?grade))
+     (ist-Information (DrsCaseFn ?sid)
+       (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))
+     (grabUserMajor ?sdrs-id ?major)
+     (grabUserGrade ?sdrs-id ?grade))
+
+(<== (grabUserMajor ?sdrs-id ComputerScience)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?major-var (MajorFn ComputerScience))))
+
+(<== (grabUserGrade ?sdrs-id Junior-Student)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?student-var Junior-Student)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

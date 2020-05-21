@@ -1,3 +1,9 @@
+(isa MajorFn UnaryFunction)
+(arg1Isa MajorFn FieldOfStudy)
+(arity MajorFn 1)
+(resultIsa MajorFn Collection)
+(comment MajorFn "(MajorFn <field>) denotes the the field that student majors in.")
+
 (in-microtheory UniversalVocabularyMt)
 
 (isa Junior-Student Student)
@@ -13,3 +19,19 @@
 
 ;(FNVerbSemtrans (TheList) Major-TheWord (and (isa :ACTION Major-Rank))
 ;  (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "student" "in") Junior-TheWord
+                (and (isa :NOUN Junior-Student)) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "student" "in") Junior-TheWord
+                (and (isa :NOUN Junior-Student)) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "junior") Student-TheWord
+                (and (isa :NOUN Junior-Student)) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "computer" "science") Major-TheWord
+                (and (isa :NOUN (MajorFn ComputerScience))) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))

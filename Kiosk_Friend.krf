@@ -28,10 +28,14 @@
       (ist-Information Interaction-Manager-KioskMt
         (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
              (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1)))
+      (ist-Information Interaction-Manager-KioskMt
+        (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
+             ;(someArgumentHasPredicate ?seq1 endKioskFriend)
+             (someArgumentHasPredicate ?seq1 kioskFriendActive)))
       (kioskFriendActive)))
     (doSayUtterance ?system-utterance ?utterance-string)))))
 
-(isa endKioskFriend Predicate)
+(isa endKioskFriend ComplexActionPredicate)
 (arity endKioskFriend 0)
 
 (preconditionForMethod
@@ -45,15 +49,22 @@
       (ist-Information Interaction-Manager-KioskMt
         (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
              (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1)))
+      (ist-Information Interaction-Manager-KioskMt
+        (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
+             ;(someArgumentHasPredicate ?seq1 endKioskFriend)))
+             (someArgumentHasPredicate ?seq1 kioskFriendActive)))
       (kioskFriendActive)))))))
 
 (preconditionForMethod
  (and (newReifiedUtterance ?system-utterance)
       (currentAgents ?agents)
       (not (elementOf psi ?agents))
+      (outsourcedOnly (currentSentenceId ?sid))
+      (ist-Information ?dcase
+        (sentenceText ?sid ?user-utterance))
+      (different ?user-utterance "Yes." "No.")
       (generateMostAppropriateQuery ?dcase ?response)
       (subexpressionMatching (psikiSayText ?p-text) ?response ?st)
-      (outsourcedOnly (currentSentenceId ?sid))
       (ist-Information ?dcase
         (sentenceInDiscourse ?sid ?s-index ?wordslist))
       (evaluate ?next-index (PlusFn 1 ?s-index)))
@@ -67,9 +78,6 @@
      InterstellarTrader-NFMt ?s-index ?next-index)
     (doAgentPlan
      (gatherResearchInterests ?sid ?dcase))))))
-
-;(<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
-;     (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1))
 
 (isa gatherResearchInterests ComplexActionPredicate)
 (arity gatherResearchInterests 2)
@@ -89,31 +97,62 @@
    (TheList
     (doSayUtterance ?system-utterance ?utterance-string)))))
 
+;;; TODO: modify it to be gatherUserInfo
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (outsourcedOnly (currentSentenceId ?sentence-id))
+      (ist-Information ?dcase
+        (getUserInfo ?sentence-id ?user-info))
+      (unifies (userInfoWGrade ?major ?grade) ?user-info)
+      (formattedContentString
+       "Ok, store ur info: major: ~a, grade: ~a, anything else I can help?" 
+       (TheList ?major ?grade) ?utterance-string))
+ (methodForAction
+  (gatherResearchInterests ?sid ?dcase)
+  (actionSequence
+   (TheList
+    ;;; TODO: store these user info to user microtheory...
+    (doSayUtterance ?system-utterance ?utterance-string)))))
+
 ;;; DIY processUserUtterance for Kiosk
 (preconditionForMethod
  (and (kioskFriendActive)
+      (outsourcedOnly (currentSentenceId ?sid))
+      (ist-Information ?dcase
+        (sentenceText ?sid ?string))
       (equals ?string "No.")
       (newReifiedUtterance ?system-utterance)
-      (userResponseExpected ?context StopOrKeepThinking)
+      ;(userResponseExpected ?context StopOrKeepThinking)
       (formattedContentString
-       "Alright, see you." (TheList) ?utterance-string)
+       "Alright, see you." (TheList) ?utterance-string))
  (methodForAction
-  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (answerQuestionViaEEs ?dcase)
   (actionSequence
    (TheList
+    ;;; TODO: stupid way to flag...
+    (doRecord (kioskFriendActive))
     (doAgentPlan (endKioskFriend))
-    (doSayUtterance ?system-utterance ?utterance-string))))))
+    (doSayUtterance ?system-utterance ?utterance-string)))))
 
 (preconditionForMethod
  (and (kioskFriendActive)
+      (outsourcedOnly (currentSentenceId ?sid))
+      (ist-Information ?dcase
+        (sentenceText ?sid ?string))
       (equals ?string "Yes.")
+      (ist-Information ?dcase
+        (sentenceInDiscourse ?sid ?s-index ?wordslist))
+      (evaluate ?next-index (PlusFn 1 ?s-index))
       (formattedContentString
        "Can you please tell me your grade and major? Thanks." (TheList) ?utterance-string))
  (methodForAction
-  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (answerQuestionViaEEs ?dcase)
   (actionSequence
    (TheList
     ;;; TODO: NF part
     ;;; TODO: store them inside user's mt...
-    (doAgentPlan (endKioskFriend))))))
+    ;(doAgentPlan (endKioskFriend))
+    (doRecord (kioskFriendActive))
+    (doSayUtterance ?system-utterance ?utterance-string)))))
     
