@@ -1,0 +1,82 @@
+(in-microtheory InterstellarTrader-NFMt)
+
+;(in-microtheory KioskFriendMt)
+
+(queryForInterpretation 0
+			(narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+					   ?suggested-field
+					   InquiringOfficeLocationEvent))
+
+(isa InquiringOfficeLocationEvent Collection)
+(isa InquiringOfficeLocationEvent TemporalObjectType)
+(genls InquiringOfficeLocationEvent RequestingInformation)
+(comment InquiringOfficeLocationEvent "")
+
+(isa asksForFacultyLocation Predicate)
+(arity asksForFacultyLocation 3)
+(comment asksForFacultyLocation "")
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+			?suggested-field InquiringOfficeLocationEvent)
+     (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (groundExpression ?faculty-name))))
+
+(<== (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+     (ist-Information (DrsCaseFn ?sid)
+		      (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))
+     (sentenceAskLocation ?sdrs-id ?faculty-name)
+     (suggestedField ?faculty-name ?group-name ?suggested-field))
+
+(isa sentenceAskLocation Predicate)
+(arity sentenceAskLocation 2)
+(arg1Isa sentenceAskLocation CycLTerm)
+(arg2Isa sentenceAskLocation Thing)
+(arg3Isa sentenceAskLocation Thing)
+(comment sentenceAskLocation "")
+
+(<== (sentenceAskLocation ?sdrs-id ?faculty-name)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+		      (possessiveRelation ?faculty-name ?office-loc))
+     (possibleFacultyName ?faculty-name))
+
+(isa possibleFacultyName Predicate)
+(arity possibleFacultyName 1)
+(arg1Isa possibleFacultyName Thing)
+(comment possibleFacultyName "")
+
+(<== (possibleFacultyName ?faculty-name)
+     (kbOnly
+      (useTransitiveInference
+       (ist-Information (SocialModelMtFn ?faculty-name)
+			(isa ?faculty-name NUPerson))
+       (ist-Information PeopleDataMt
+			(isa ?faculty-name AcademicProfessional)))))
+			
+(isa suggestedField Predicate)
+(arity suggestedField 3)
+			
+(<== (suggestedField ?faculty NUCognitiveSystems "AI and Cognitive Science")
+     (kbOnly
+	  (ist-Information (SocialModelMtFn ?faculty) 
+		(nuGroupMember NUCognitiveSystems ?faculty))))
+
+(<== (suggestedField ?faculty NUComputerEngineeringAndSystems "Engineering and Systems")
+	 (kbOnly
+	  (ist-Information (SocialModelMtFn ?faculty) 
+		(nuGroupMember NUComputerEngineeringAndSystems ?faculty))))
+
+(<== (suggestedField ?faculty NUSignalsAndSystems "Signals and Systems")
+	 (kbOnly
+	  (ist-Information (SocialModelMtFn ?faculty)
+		(nuGroupMember NUSignalsAndSystems ?faculty))))
+
+(<== (suggestedField ?faculty NUComputingAlgorithmsAndApplications "Algorithms and Applications")
+	 (kbOnly
+	  (ist-Information (SocialModelMtFn ?faculty)
+		(nuGroupMember NUComputingAlgorithmsAndApplications ?faculty))))
+
+(<== (suggestedField ?faculty NUGraphicsAndInteractiveMedia "Graphics and HCI")
+     (nuGroupMember NUGraphicsAndInteractiveMedia ?faculty))

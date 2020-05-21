@@ -1,0 +1,119 @@
+(in-microtheory Interaction-Manager-KioskMt)
+
+;;; (achieve :receiver interaction-manager :content (playWithKioskFriend))
+;;; (achieve :receiver interaction-manager :content (endKioskFriend))
+
+;;; start the game...
+(isa playWithKioskFriend ComplexActionPredicate)
+(arity playWithKioskFriend 0)
+(comment playWithKioskFriend
+  "(playWithKioskFriend) tweaks the Interaction Manager KioskMt to use semantic 
+   interpretation methods that implement the kiosk friend program.")
+
+(isa kioskFriendActive Predicate)
+(arity kioskFriendActive 0)
+
+;;; start
+(preconditionForMethod 
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (formattedContentString
+       "Hi ~a, how can I help you today?" (TheList ?user) ?utterance-string))
+ (methodForAction
+  (playWithKioskFriend)
+  (actionSequence
+   (TheList 
+    (doRecordMembers
+     (TheSet
+      (ist-Information Interaction-Manager-KioskMt
+        (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
+             (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1)))
+      (kioskFriendActive)))
+    (doSayUtterance ?system-utterance ?utterance-string)))))
+
+(isa endKioskFriend Predicate)
+(arity endKioskFriend 0)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (endKioskFriend)
+  (actionSequence
+   (TheList
+    (doForgetMembers
+     (TheSet
+      (ist-Information Interaction-Manager-KioskMt
+        (<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
+             (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1)))
+      (kioskFriendActive)))))))
+
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentAgents ?agents)
+      (not (elementOf psi ?agents))
+      (generateMostAppropriateQuery ?dcase ?response)
+      (subexpressionMatching (psikiSayText ?p-text) ?response ?st)
+      (outsourcedOnly (currentSentenceId ?sid))
+      (ist-Information ?dcase
+        (sentenceInDiscourse ?sid ?s-index ?wordslist))
+      (evaluate ?next-index (PlusFn 1 ?s-index)))
+ (methodForAction 
+  (answerQuestionViaEEs ?dcase)
+  (actionSequence
+   (TheList 
+    (doSayUtterance ?system-utterance ?p-text)
+    (doAnnounce "current ?sid: ~a~%" (?sid))
+    (doEADiscourseInterpretation
+     InterstellarTrader-NFMt ?s-index ?next-index)
+    (doAgentPlan
+     (gatherResearchInterests ?sid ?dcase))))))
+
+;(<== (preferInContext (answerQuestionViaEEs ?dcase) ?seq1 ?seq2)
+;     (containsPattern (doEADiscourseInterpretation ?mt ?s-id ?n-id) ?seq1))
+
+(isa gatherResearchInterests ComplexActionPredicate)
+(arity gatherResearchInterests 2)
+
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (outsourcedOnly (currentSentenceId ?sentence-id))
+      (ist-Information ?dcase
+        (asksForFacultyLocation ?sentence-id ?faculty ?suggestion))
+      (isa ?faculty ArtificialIntelligenceResearcher)
+      (formattedContentString
+       "~a, Are you maybe interested in ~a?" (TheList ?user ?suggestion) ?utterance-string))
+ (methodForAction
+  (gatherResearchInterests ?sid ?dcase)
+  (actionSequence
+   (TheList
+    (doSayUtterance ?system-utterance ?utterance-string)))))
+
+;;; DIY processUserUtterance for Kiosk
+(preconditionForMethod
+ (and (kioskFriendActive)
+      (equals ?string "No.")
+      (newReifiedUtterance ?system-utterance)
+      (userResponseExpected ?context StopOrKeepThinking)
+      (formattedContentString
+       "Alright, see you." (TheList) ?utterance-string)
+ (methodForAction
+  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (actionSequence
+   (TheList
+    (doAgentPlan (endKioskFriend))
+    (doSayUtterance ?system-utterance ?utterance-string))))))
+
+(preconditionForMethod
+ (and (kioskFriendActive)
+      (equals ?string "Yes.")
+      (formattedContentString
+       "Can you please tell me your grade and major? Thanks." (TheList) ?utterance-string))
+ (methodForAction
+  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (actionSequence
+   (TheList
+    ;;; TODO: NF part
+    ;;; TODO: store them inside user's mt...
+    (doAgentPlan (endKioskFriend))))))
+    

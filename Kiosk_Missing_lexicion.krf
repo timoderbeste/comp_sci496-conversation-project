@@ -1,0 +1,15 @@
+(in-microtheory UniversalVocabularyMt)
+
+(isa Junior-Student Student)
+(isa Junior-Student Collection)
+
+(comment Junior-Student "Refers to all junior students.")
+
+(in-microtheory EANLU-Pnames)
+
+(indexedProperName (TheList junior) Junior-Student)
+
+(in-microtheory FrameNetSemTransMt)
+
+;(FNVerbSemtrans (TheList) Major-TheWord (and (isa :ACTION Major-Rank))
+;  (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
