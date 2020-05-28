@@ -1,0 +1,11 @@
+(isa (UserContextFn Melody) Microtheory)
+
+(in-microtheory (UserContextFn Melody))
+
+;(MajorFn ComputerScience)
+
+(majorInSchool (MajorFn ComputerScience))
+
+(preferResearchArea NUComputingAlgorithmsAndApplications)
+
+(yearOfGrade Senior-Student)

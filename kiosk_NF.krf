@@ -13,17 +13,17 @@
 (comment InquiringOfficeLocationEvent "")
 
 (isa asksForFacultyLocation Predicate)
-(arity asksForFacultyLocation 3)
+(arity asksForFacultyLocation 4)
 (comment asksForFacultyLocation "")
 
 (<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
 			?suggested-field InquiringOfficeLocationEvent)
-     (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+     (asksForFacultyLocation ?sid ?faculty-name ?group-name ?suggested-field)
      (individualSatisfyingConditions
       ?event-id IBTGeneration
       (TheSet (groundExpression ?faculty-name))))
 
-(<== (asksForFacultyLocation ?sid ?faculty-name ?suggested-field)
+(<== (asksForFacultyLocation ?sid ?faculty-name ?group-name ?suggested-field)
      (ist-Information (DrsCaseFn ?sid)
 		      (discourseCaseForDrs ?dcase ?sid))
      (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))

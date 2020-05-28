@@ -1,0 +1,11 @@
+(isa (UserContextFn john) Microtheory)
+
+(in-microtheory (UserContextFn john))
+
+;(MajorFn ComputerEngineering)
+
+(majorInSchool (MajorFn ComputerEngineering))
+
+(preferResearchArea NUComputerEngineeringAndSystems)
+
+(yearOfGrade Senior-Student)
