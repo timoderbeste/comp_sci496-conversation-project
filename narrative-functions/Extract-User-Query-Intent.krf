@@ -1,0 +1,60 @@
+(in-microtheory KioskFriendMt)
+
+(queryForInterpretation 0
+			(narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+					   ?recommendationTopic
+					   AskingRecommendationEvent))
+
+(isa AskingRecommendationEvent Collection)
+(isa AskingRecommendationEvent TemporalObjectType)
+(isa AskingRecommendationEvent RequestingInformation)
+(comment AskingRecommendationEvent
+	 "")
+
+
+(isa asksForRecommendation Predicate)
+(arity asksForRecommendation 3)
+(arg1Isa asksForRecommendation IBTGeneration)
+(arg2Isa asksForRecommendation Thing)
+(arg3ISA asksForRecommendation Thing)
+(comment asksForRecommendation
+	 "")
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+			?recommendationTopic
+			AskingRecommendationEvent)
+     (asksForRecommendation ?sid ?topic ?recommendation)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (groundExpression ?topic))))
+
+(<== (asksForRecommendation ?sid ?topic ?recommendation)
+     (ist-Information (DrsCaseFn ?sid)
+		      (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid))
+     (sentenceAskRecommendation ?sdrs-id ?topic))
+
+
+(isa sentenceAskRecommendation Predicate)
+(arity sentenceAskRecommendation 2)
+(arg1Isa sentenceAskRecommendation CycLTerm)
+(arg2Isa sentenceAskRecommendation Thing)
+(comment sentenceAskRecommendation
+	 "")
+
+(<== (sentenceAskRecommendation ?sdrs-id ?topic)
+     (ist-Information (DrsCaseFn ?sdrs-id))
+     (possibleRecommendationTopic ?topic))
+
+
+(isa possibleRecommendationTopic Predicate)
+(arity possibleRecommendationTopic 1)
+(arg1Isa possibleRecommendationTopic Thing)
+(comment possibleRecommendationTopic
+	 "")
+
+(<== (possibleRecommendationTopic ?topic)
+     (kbOnly
+      (useTransitiveInference
+       (ist-Information UniversalVocabularyMt
+			(isa ?topic RecommendationTopic)))))
