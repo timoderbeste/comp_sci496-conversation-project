@@ -199,4 +199,28 @@
      (ist-Information (UserContextFn ?user) (preferResearchArea ?group-name)))
     (doRecord (kioskFriendActive))
     (doSayUtterance ?system-utterance ?utterance-string)))))
-    
+
+
+(<== (triggerGradeMajorInquiry ?user ?dcase ?input ?group-name)
+     (equals ?string "Yes.")
+     (noPreferredResearchPredicted ?user ?dcase ?group-name))
+
+(<== (noPreferredResearchPredicted ?user ?dcase ?group-name)
+     (ist-Information ?dcase (asksForRecommendation ?sentence-id ?topic))
+     (ist-Information (UserContextFn ?user) (uninferredSentence (preferResearchArea ?group-name))))
+
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (outsourcedOnly (currentSentenceId ?sentence-id))
+      ;;; suggestions are grabbed from horn clauses.
+      (ist-Information ?dcase
+		       (asksForRecommendation ?sentence-id ?topic))
+      (ist-Information (UserContextFn ?user) (preferResearchArea ?group-name))
+      (formattedContentString
+       "~a, Are you maybe interested in ~a?" (TheList ?user ?group-name) ?utterance-string))
+ (methodForAction
+  (gatherResearchInterests ?sid ?dcase)
+  (actionSequence
+   (TheList
+    (doSayUtterance ?system-utterance ?utterance-string)))))
