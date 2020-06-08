@@ -206,7 +206,7 @@
       (recommendUser ?user ?result-recommendation)
       (extractResearchAreaResult ?result-recommendation ?research-area)
       (formattedContentString
-       "Ok, store ur info. And based on previous students' data, I would recommend ~a. Anything else I can help?" 
+       "Ok, store ur info. And based on previous students' data, I would recommend ~a group. Anything else I can help?" 
        (TheList ?research-area) ?utterance-string))
  (methodForAction
   (recommendToUser)

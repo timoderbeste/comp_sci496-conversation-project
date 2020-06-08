@@ -1,0 +1,10 @@
+(isa KioskFriendCaseLibraryTest CaseLibrary)
+
+;(subCaseLibrary (KBCaseFn (UserContextFn cathy)) KioskFriendCaseLibrary)
+;(subCaseLibrary (KBCaseFn (UserContextFn john)) KioskFriendCaseLibrary)
+;(subCaseLibrary (KBCaseFn (UserContextFn Melody)) KioskFriendCaseLibrary)
+
+(caseLibraryContains KioskFriendCaseLibrary (UserContextFn PeterClark))
+(caseLibraryContains KioskFriendCaseLibrary (UserContextFn john))
+(caseLibraryContains KioskFriendCaseLibrary (UserContextFn Melody))
+

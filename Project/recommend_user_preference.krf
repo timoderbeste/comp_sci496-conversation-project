@@ -1,0 +1,38 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: recommend_user_preference.krf
+;;;;    System: Companions
+;;;;    Author: Chenghong Lin
+;;;;   Created: June 4, 2020 01:05:44
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-27 12:08:59 -0500 (Thu, 27 Sep 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(isa recommendUser Predicate)
+(arity recommendUser 2)
+
+(<== (recommendUser ?user ?result)
+     (outsourcedOnly 
+      (reminding (KBCaseFn (UserContextFn ?user))
+                 KioskFriendCaseLibraryTest
+                 (TheSet)
+                 ?case ?match))
+     (bestMapping ?match ?mapping)
+     (candidateInferenceOf ?ci ?mapping)
+     (candidateInferenceContent ?ci ?result))
+
+(isa extractResearchAreaResult Predicate)
+(arity extractResearchAreaResult 2)
+
+(<== (extractResearchAreaResult ?expression ?result)
+     (containsPattern AnalogySkolemFn ?expression)
+     (subexpressionMatching (AnalogySkolemFn ?result) ?expression ?sub-expr))
+
+(<== (extractResearchAreaResult ?expression ?result)
+     (uninferredSentence (containsPattern AnalogySkolemFn ?expression))
+     (unifies ?result ?expression))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,7 @@
+(isa (UserContextFn cathy) Microtheory)
+
+(in-microtheory (UserContextFn cathy))
+
+(majorInSchool cathy (MajorFn ComputerScience))
+(preferResearchArea cathy NUCognitiveSystems)
+(yearOfGrade cathy Junior-Student)

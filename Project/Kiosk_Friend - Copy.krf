@@ -123,23 +123,7 @@
    (TheList
     (doSayUtterance ?system-utterance ?utterance-string)))))
     ;(doRecord 
-      ;(ist-Information (UserContextFn ?user) (preferResearchArea ?group-name)))))))
-
-(preconditionForMethod
- (and (newReifiedUtterance ?system-utterance)
-      (currentUser ?user)
-      (outsourcedOnly (currentSentenceId ?sentence-id))
-      ;;; suggestions are grabbed from horn clauses.
-      (ist-Information ?dcase
-        (detectingUserRequest ?sentence-id ?request))
-      (formattedContentString
-       "~a, can you tell me your major and what year are you?" (TheList ?user) ?utterance-string))
- (methodForAction
-  (gatherResearchInterests ?sid ?dcase)
-  (actionSequence
-   (TheList
-    (doSayUtterance ?system-utterance ?utterance-string)))))
-
+     ;(ist-Information (UserContextFn ?user) (preferResearchArea ?group-name)))))))
 
 (isa UserContextFn UnaryFunction)
 (arity UserContextFn 1)
@@ -150,9 +134,6 @@
  (and (newReifiedUtterance ?system-utterance)
       (currentUser ?user)
       (outsourcedOnly (currentSentenceId ?sentence-id))
-      (uninferredSentence
-       (ist-Information ?dcase
-         (detectingUserRequest ?prev-sentence-id ?request)))
       (ist-Information ?dcase
         (getUserInfo ?sentence-id ?user-info))
       (unifies (userInfoWGrade ?major ?grade) ?user-info)
@@ -163,57 +144,13 @@
   (gatherResearchInterests ?sid ?dcase)
   (actionSequence
    (TheList
+    ;;; TODO: store these user info to user microtheory...
     (doRecord
      (isa (UserContextFn ?user) Microtheory))
     (doRecordMembers
      (TheSet
-      (ist-Information (UserContextFn ?user) (majorInSchool ?user (MajorFn ?major)))
-      (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade))))
-    (doSayUtterance ?system-utterance ?utterance-string)))))
-
-(preconditionForMethod
- (and (newReifiedUtterance ?system-utterance)
-      (currentUser ?user)
-      (outsourcedOnly (currentSentenceId ?sentence-id))
-      (ist-Information ?dcase
-         (detectingUserRequest ?prev-sentence-id ?request))
-      (ist-Information ?dcase
-        (getUserInfo ?sentence-id ?user-info))
-      (unifies (userInfoWGrade ?major ?grade) ?user-info))
-      ;(recommendUser ?user ?result-recommendation)
-      ;(formattedContentString
-      ; "Ok, store ur info. And based on previous data, I would recommend ~a. Anything else I can help?" 
-      ; (TheList ?result-recommendation) ?utterance-string))
- (methodForAction
-  (gatherResearchInterests ?sid ?dcase)
-  (actionSequence
-   (TheList
-    (doRecord
-     (isa (UserContextFn ?user) Microtheory))
-    (doRecordMembers
-     (TheSet
-      (ist-Information (UserContextFn ?user) (majorInSchool ?user (MajorFn ?major)))
-      (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade))))
-    ;(doSayUtterance ?system-utterance ?utterance-string)
-    (doAgentPlan (recommendToUser))))))
-
-(isa recommendToUser ComplexActionPredicate)
-(arity recommendToUser 0)
-
-(preconditionForMethod
- (and (newReifiedUtterance ?system-utterance)
-      (currentUser ?user)
-      (recommendUser ?user ?result-recommendation)
-      (extractResearchAreaResult ?result-recommendation ?research-area)
-      (formattedContentString
-       "Ok, store ur info. And based on previous students' data, I would recommend ~a. Anything else I can help?" 
-       (TheList ?research-area) ?utterance-string))
- (methodForAction
-  (recommendToUser)
-  (actionSequence
-   (TheList
-    (doRecord 
-     (ist-Information (UserContextFn ?user) (preferResearchArea ?user ?research-area)))
+      (ist-Information (UserContextFn ?user) (majorInSchool (MajorFn ?major)))
+      (ist-Information (UserContextFn ?user) (yearOfGrade ?grade))))
     (doSayUtterance ?system-utterance ?utterance-string)))))
 
 ;;; DIY processUserUtterance for Kiosk

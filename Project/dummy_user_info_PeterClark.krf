@@ -1,0 +1,7 @@
+(isa (UserContextFn PeterClark) Microtheory)
+
+(in-microtheory (UserContextFn PeterClark))
+
+(majorInSchool PeterClark (MajorFn ComputerScience))
+(preferResearchArea PeterClark NUCognitiveSystems)
+(yearOfGrade PeterClark Junior-Student)

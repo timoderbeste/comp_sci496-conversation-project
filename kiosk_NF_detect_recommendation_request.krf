@@ -1,0 +1,41 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: kiosk_NF_detect_recommendation_request.krf
+;;;;    System: Companions
+;;;;    Author: Chenghong Lin
+;;;;   Created: June 4, 2020 07:07:59
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-27 12:08:59 -0500 (Thu, 27 Sep 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory InterstellarTrader-NFMt)
+
+(queryForInterpretation 0
+                        (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                                           ?request
+                                           DetectingRecommendation))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?request DetectingRecommendation)
+     (detectingUserRequest ?sid ?request)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (groundExpression ?request))))
+
+(isa detectingUserRequest Predicate)
+(arity detectingUserRequest 2)
+
+(<== (detectingUserRequest ?sid ?request)
+     (ist-Information (DrsCaseFn ?sid)
+       (discourseCaseForDrs ?dcase ?sid))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?want-var DesiringThat))
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (purposeInEvent ?obj ?verb ?drsdrs))
+     (ist-Information ?drsdrs (isa ?request ResearchTeam)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

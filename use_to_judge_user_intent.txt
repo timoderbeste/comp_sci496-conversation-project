@@ -1,0 +1,3 @@
+((isa yes8411 (NLResponseFn Affirmative-NLResponse)))
+
+(isa no8543 (NLResponseFn Negative-NLResponse))
