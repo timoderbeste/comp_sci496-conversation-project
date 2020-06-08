@@ -1,0 +1,17 @@
+(in-microtheory UniversalVocabularyMt)
+(isa RecommendationFn CollectionDenotingFunction)
+(isa RecommendationFn UnaryFunction)
+(isa RecommendationFn TermMacroFunction)
+(isa RecommendationFn ReifiableFunction)
+(arg1Isa RecommendationFn Thing)
+(resultIsa RecommendationFn Thing)
+(comment RecommendationFn
+	 "")
+
+(in-microtheory FrameNetSemTransMt)
+(FNNounSemtrans (TheList "recommendation" "for" "research") Group-TheWord
+		(and (isa :NOUN (RecommendationFn ResearchTeam))) (frame FN_Misc)
+		(bindingTemplate (TheList)) (groupPatterns (TheSet)))
+(FNNounSemtrans (TheList "recommendation" "for" "research") Team-TheWord
+		(and (isa :NOUN (RecommendationFn ResearchTeam))) (frame FN_Misc)
+		(bindingTemplate (TheList)) (groupPatterns (TheSet)))
