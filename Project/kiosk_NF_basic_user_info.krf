@@ -45,10 +45,17 @@
      (ist-Information (DrsCaseFn ?sdrs-id)
        (isa ?major-var (MajorFn ComputerScience))))
 
+(<== (grabUserMajor ?sdrs-id ComputerEngineering)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?major-var (MajorFn ComputerEngineering))))
+
 (<== (grabUserGrade ?sdrs-id Junior-Student)
      (ist-Information (DrsCaseFn ?sdrs-id)
        (isa ?student-var Junior-Student)))
 
+(<== (grabUserGrade ?sdrs-id Senior-Student)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?student-var Senior-Student)))
 
 
 
