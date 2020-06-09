@@ -5,3 +5,10 @@
 (majorInSchool cathy (MajorFn ComputerScience))
 (preferResearchArea cathy NUCognitiveSystems)
 (yearOfGrade cathy Junior-Student)
+(courseTaken cathy COMP_SCI-325-1-ArtificialIntelligenceProgramming)
+(courseTaken cathy COMP_SCI-371-KnowledgeRepresentationAndReasoning)
+
+(hasSkill cathy DoingMath)
+(hasSkill cathy ProgrammingAComputer)
+
+(dislikeSkill cathy Splicing-Electrical)
