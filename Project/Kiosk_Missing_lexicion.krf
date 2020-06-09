@@ -20,6 +20,14 @@
 (arity preferResearchTopic 2)
 (comment preferResearchTopic "(preferResearchTopic <user> <topic>)")
 
+(isa researchGroupRequiredSkill BinaryPredicate)
+(arity researchGroupRequiredSkill 2)
+(arg1Isa researchGroupRequiredSkill NUGroup)
+(arg2Isa researchGroupRequiredSkill SkilledActivityType)
+
+(isa dislikeSkill BinaryPredicate)
+(arity dislikeSkill 2)
+
 (in-microtheory UniversalVocabularyMt)
 
 (isa Junior-Student Student)

@@ -1,0 +1,26 @@
+(in-microtheory BaseKB)
+
+(researchGroupRequiredSkill NUCognitiveSystems DoingMath)
+(researchGroupRequiredSkill NUCognitiveSystems ProgrammingAComputer)
+
+(researchGroupRequiredSkill NUComputerEngieeringAndSystems PortingAComputerProgram)
+(researchGroupRequiredSkill NUComputerEngieeringAndSystems ProgrammingAComputer)
+(researchGroupRequiredSkill NUComputerEngieeringAndSystems ProgrammingAComputerizedDevice)
+(researchGroupRequiredSkill NUComputerEngieeringAndSystems Splicing-Electrical)
+
+(researchGroupRequiredSkill NUSignalsAndSystems ProgrammingAComputer)
+(researchGroupRequiredSkill NUSignalsAndSystems ProgrammingAComputerizedDevice)
+(researchGroupRequiredSkill NUSignalsAndSystems PortingAComputerProgram)
+
+(<== (recommendedGroup ?group ?user)
+     (hasSkills ?group ?user)
+     (likeSkills ?group ?user))
+
+(<== (hasSkills ?group ?user)
+     (researchGroupRequiredSkill ?group ?skill)
+     (hasSkill ?user ?skill))
+
+(<== (likeSkills ?group ?user)
+     (dislike ?user ?skill1)
+     (researchGroupRequiredSkill ?group ?skill2)
+     (different ?skill1 ?skill2))
