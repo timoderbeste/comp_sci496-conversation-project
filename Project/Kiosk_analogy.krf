@@ -1,20 +1,16 @@
 (in-microtheory Interaction-Manager-KioskMt)
 
-; (achieve :receiver interaction-manager :content (kioskFriendSageSetup))
+; (achieve :receiver interaction-manager :content (kioskFriendCaselibrarySetup))
 
-(isa kioskFriendSageSetup ComplexActionPredicate)
-(arity kioskFriendSageSetup 0)
+(isa kioskFriendCaselibrarySetup ComplexActionPredicate)
+(arity kioskFriendCaselibrarySetup 0)
 
 (preconditionForMethod
  (true)
  (methodForAction
-  (kioskFriendSageSetup)
+  (kioskFriendCaselibrarySetup)
   (actionSequence
    (TheList
-    (doTell (nukeGpool kiosk-friend-sage-context))
-    (doRecord (gpoolSelectStrategy kiosk-friend-sage-context :macfac))
-    (doRecord (gpoolAssimilationThreshold kiosk-friend-sage-context 0.11))
-    (doRecord (gpoolUseProbability kiosk-friend-sage-context True))
-    (doTell (sageSelectAndGeneralize (UserContextFn john) kiosk-friend-sage-context))
-    (doTell (sageSelectAndGeneralize (UserContextFn Melody) kiosk-friend-sage-context))
-    (doTell (sageSelectAndGeneralize (UserContextFn cathy) kiosk-friend-sage-context))))))
+    (doRecord (caseLibraryContains KioskFriendCaseLibrary (UserContextFn PeterClark)))
+    (doRecord (caseLibraryContains KioskFriendCaseLibrary (UserContextFn john)))
+    (doRecord (caseLibraryContains KioskFriendCaseLibrary (UserContextFn Melody)))))))
