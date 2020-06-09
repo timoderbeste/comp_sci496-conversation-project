@@ -37,7 +37,10 @@ Please load all the flat files inside Project code file.
     To start the recommendation part, call:
     (achieve :receiver interaction-manager :content (playWithKioskFriend))
     (N.B. Currently we can only handle ask for research group recommendation.)
-
+	
+	Also clean up the current user microtheory if you played a) option before.
+	(doForgetKBMt '(UserContextFn ?currentUser)) 
+	
 	So the interaction part will look like below if you want to play with it.
 	Type "I want to find a research group." to trigger the recommendation part.
 	
