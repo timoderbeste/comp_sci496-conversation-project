@@ -5,7 +5,7 @@
 (<== (recommendUser ?user ?result)
      (outsourcedOnly 
       (reminding (KBCaseFn (UserContextFn ?user))
-                 KioskFriendCaseLibraryTest
+                 KioskFriendCaseLibrary
                  (TheSet)
                  ?case ?match))
      (bestMapping ?match ?mapping)
