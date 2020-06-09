@@ -14,13 +14,12 @@
 
 (<== (recommendedGroup ?group ?user)
      (hasSkills ?group ?user)
-     (likeSkills ?group ?user))
+     (uninferredSentence (dislikesSkills ?group ?user)))
 
 (<== (hasSkills ?group ?user)
      (researchGroupRequiredSkill ?group ?skill)
      (hasSkill ?user ?skill))
 
-(<== (likeSkills ?group ?user)
-     (dislikeSkill ?user ?skill1)
-     (researchGroupRequiredSkill ?group ?skill2)
-     (different ?skill1 ?skill2))
+(<== (dislikesSkills ?group ?user)
+     (dislikeSkill ?user ?skill)
+     (researchGroupRequiredSkill ?group ?skill))
