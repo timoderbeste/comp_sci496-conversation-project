@@ -1,27 +1,37 @@
+(in-microtheory Interaction-Manager-KioskMt)
 
 (isa recommendUser Predicate)
 (arity recommendUser 2)
 
-(<== (recommendUser ?user ?result)
-     (outsourcedOnly 
-      (reminding (KBCaseFn (UserContextFn ?user))
-                 KioskFriendCaseLibrary
-                 (TheSet)
-                 ?case ?match))
-     (bestMapping ?match ?mapping)
-     (candidateInferenceOf ?ci ?mapping)
-     (candidateInferenceContent ?ci ?result))
+(<== (recommendUser ?user ?result-set)
+     (evaluate ?result-set
+       (TheClosedRetrievalSetOf ?result
+         (and
+              (outsourcedOnly 
+               (reminding (KBCaseFn (UserContextFn ?user))
+                          KioskFriendCaseLibrary
+                          (TheSet)
+                          ?case ?match))
+              (bestMapping ?match ?mapping)
+              (candidateInferenceOf ?ci ?mapping)
+              (candidateInferenceContent ?ci ?result)))))
 
 (isa extractResearchAreaResult Predicate)
-(arity extractResearchAreaResult 2)
+(arity extractResearchAreaResult 3)
 
-(<== (extractResearchAreaResult ?expression ?result)
+(<== (extractResearchAreaResult ?user ?expression ?result-set)
+     (containsPattern preferResearchArea ?expression)
      (containsPattern AnalogySkolemFn ?expression)
-     (subexpressionMatching (AnalogySkolemFn ?result) ?expression ?sub-expr))
+     ;(subexpressionMatching (AnalogySkolemFn ?result) ?expression ?sub-expr))
+     (evaluate ?result-set
+       (TheClosedRetrievalSetOf ?result
+         (subexpressionMatching (preferResearchArea ?user
+                                                    (AnalogySkolemFn ?result)) ?expression ?sub-expr))))
 
-(<== (extractResearchAreaResult ?expression ?result)
-     (uninferredSentence (containsPattern AnalogySkolemFn ?expression))
-     (unifies ?result ?expression))
+;(<== (extractResearchAreaResult ?user ?expression ?result-set)
+;     (containsPattern preferResearchArea ?expression)
+;     (uninferredSentence (containsPattern AnalogySkolemFn ?expression))
+;     (unifies ?result ?expression))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; End of Code

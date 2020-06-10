@@ -1,6 +1,9 @@
 (in-microtheory BaseKB)
 
-(researchGroupRequiredSkill NUCognitiveSystems DoingMath)
+(isa researchGroupRequiredSkill Predicate)
+(arity researchGroupRequiredSkill 2)
+
+(researchGroupRequiredSkill NUComputingAlgorithmsAndApplications DoingMath)
 (researchGroupRequiredSkill NUCognitiveSystems ProgrammingAComputer)
 
 (researchGroupRequiredSkill NUComputerEngieeringAndSystems PortingAComputerProgram)
@@ -12,14 +15,21 @@
 (researchGroupRequiredSkill NUSignalsAndSystems ProgrammingAComputerizedDevice)
 (researchGroupRequiredSkill NUSignalsAndSystems PortingAComputerProgram)
 
+(isa recommendedGroup Predicate)
+(arity recommendedGroup 2)
+(isa hasSkills Predicate)
+(arity hasSkills 2)
+(isa dislikeSkills Predicate)
+(arity dislikesSkills 2)
+
 (<== (recommendedGroup ?group ?user)
      (hasSkills ?group ?user)
      (uninferredSentence (dislikesSkills ?group ?user)))
 
 (<== (hasSkills ?group ?user)
      (researchGroupRequiredSkill ?group ?skill)
-     (hasSkill ?user ?skill))
+     (ist-Information (UserContextFn ?user) (hasSkill ?user ?skill)))
 
 (<== (dislikesSkills ?group ?user)
-     (dislikeSkill ?user ?skill)
+     (ist-Information (UserContextFn ?user) (dislikeSkill ?user ?skill))
      (researchGroupRequiredSkill ?group ?skill))

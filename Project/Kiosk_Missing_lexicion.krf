@@ -20,13 +20,11 @@
 (arity preferResearchTopic 2)
 (comment preferResearchTopic "(preferResearchTopic <user> <topic>)")
 
-(isa researchGroupRequiredSkill BinaryPredicate)
-(arity researchGroupRequiredSkill 2)
-(arg1Isa researchGroupRequiredSkill NUGroup)
-(arg2Isa researchGroupRequiredSkill SkilledActivityType)
-
-(isa dislikeSkill BinaryPredicate)
+(isa dislikeSkill Predicate)
 (arity dislikeSkill 2)
+
+(isa hasSkill Predicate)
+(arity hasSkill 2)
 
 (in-microtheory UniversalVocabularyMt)
 
@@ -73,4 +71,12 @@
 
 (FNNounSemtrans (TheList "research") Group-TheWord
                 (and (isa :NOUN ResearchTeam)) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "splicing") Electrical-TheWord
+                (and (isa :NOUN Splicing-Electrical)) (frame FN_Misc)
+                (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNounSemtrans (TheList "computer") Program-TheWord
+                (and (isa :NOUN ComputerProgram-CW)) (frame FN_Misc)
                 (bindingTemplate (TheList)) (groupPatterns (TheSet)))

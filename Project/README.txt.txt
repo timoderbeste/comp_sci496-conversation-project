@@ -17,6 +17,9 @@ Please load all the flat files inside Project code file.
     An example of basic information sentence is like, "I'm a junior student and in computer science major."
     If you type "No", it will end the conversation, without building user microtheory.
 	
+	Also you can talk to Kiosk about your preference (E.g., what you like / dislike), it will store these
+	information inside user microtheory and used for future detailed recommendation.
+	
 	===Example Dialog:===
 	Hi cathy, how can I help you today? 
 	where is ken forbus's office? 
@@ -26,6 +29,12 @@ Please load all the flat files inside Project code file.
 	Can you please tell me your grade and major? Thanks. 
 	I'm a junior student and in computer science major. 
 	Ok, store ur info: major: ComputerScience, grade: Junior-Student, anything else I can help? 
+	I like doing math. 
+	Okay, stored your preference. Anything else I can help? 
+	I like computer program. 
+	Okay, stored your preference. Anything else I can help? 
+	I dislike splicing electrical. 
+	Okay, stored your preference. Anything else I can help? 
 	No. 
 	Alright, see you. 
 	
@@ -34,7 +43,9 @@ Please load all the flat files inside Project code file.
     First, please setup case library, here due to one session manager can only have one username, thus we created some dummy data.
     You can call the below command to set up case library.
     (achieve :receiver interaction-manager :content (kioskFriendCaselibrarySetup))
-    To start the recommendation part, call:
+    To start the recommendation part, first clear working memory by: 
+	(doClearWorkingMemory)
+	Then call:
     (achieve :receiver interaction-manager :content (playWithKioskFriend))
     (N.B. Currently we can only handle ask for research group recommendation.)
 	
@@ -51,11 +62,32 @@ Please load all the flat files inside Project code file.
 	After that, it will give recommendations.	
 	Right now, after kiosk give recommendations, we plan to stop here. So uses "No." to end the conversation.
 	
-	===Example Dialog:===
+	===Example Dialog 1:===
+	Hi cathy, how can I help you today? 
+	I want to find a research group. 
+	cathy, can you tell me your major and what year are you? 
+	I'm a junior student and in computer science major. 
+	Ok, store ur info. And based on previous students' data, I would recommend these (TheSet NUComputingAlgorithmsAndApplications NUComputerEngineeringAndSystems NUCognitiveSystems) group. You can provide more information so that I can better assist you. Anything else I can help? 
+	I like doing math. 
+	Okay, stored your preference. Anything else I can help? 
+	I dislike splicing electrical. 
+	Okay, stored your preference. Anything else I can help? 
+	I want to find a research group. 
+	Ok, recommend NUComputingAlgorithmsAndApplications group based on your preference. Anything else I can help? 
+	No. 
+	Alright, see you. 
+	
+	===Example Dialog 2:===
 	Hi cathy, how can I help you today? 
 	I want to find a research group. 
 	cathy, can you tell me your major and what year are you? 
 	I'm a senior student and in computer engineering major. 
-	Ok, store ur info. And based on previous students' data, I would recommend NUComputingAlgorithmsAndApplications group. Anything else I can help? 
+	Ok, store ur info. And based on previous students' data, I would recommend these (TheSet NUComputingAlgorithmsAndApplications NUComputerEngineeringAndSystems NUCognitiveSystems) group. You can provide more information so that I can better assist you. Anything else I can help? 
+	I like splicing electrical. 
+	Okay, stored your preference. Anything else I can help? 
+	I dislike doing math. 
+	Okay, stored your preference. Anything else I can help? 
+	I want to find a research group. 
+	Ok, recommend NUComputerEngieeringAndSystems group based on your preference. Anything else I can help? 
 	No. 
 	Alright, see you. 

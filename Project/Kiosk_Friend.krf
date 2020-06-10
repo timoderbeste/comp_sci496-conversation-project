@@ -86,7 +86,11 @@
 (preconditionForMethod
  (and 
       (newReifiedUtterance ?system-utterance)
-      (uninferredSentence (mostSpecificUtteranceType ?sid DeclarativeUtterance))
+      (mostSpecificUtteranceType ?sid ?sentence-type)
+      (elementOf ?sentence-type (TheSet WhatQuestion-IBT WhenQuestion-IBT WhereQuestion-IBT 
+                                        WhichQuestion-IBT WhoQuestion-IBT WhyQuestion-IBT
+                                        YesOrNoQuestion-IBT))
+      ;(uninferredSentence (mostSpecificUtteranceType ?sid DeclarativeUtterance))
       (generateMostAppropriateQuery ?dcase ?response)
       (subexpressionMatching (psikiSayText ?p-text) ?response ?st))
  (methodForAction
@@ -98,7 +102,11 @@
 (preconditionForMethod
  (and 
       (newReifiedUtterance ?system-utterance)
-      (mostSpecificUtteranceType ?sid DeclarativeUtterance))
+      (mostSpecificUtteranceType ?sid ?sentence-type)
+      (uninferredSentence
+       (elementOf ?sentence-type (TheSet WhatQuestion-IBT WhenQuestion-IBT WhereQuestion-IBT 
+                                        WhichQuestion-IBT WhoQuestion-IBT WhyQuestion-IBT
+                                         YesOrNoQuestion-IBT))))
  (methodForAction
   (judgeToSayKioskAnswer ?sid ?dcase)
   (actionSequence
@@ -129,6 +137,8 @@
  (and (newReifiedUtterance ?system-utterance)
       (currentUser ?user)
       (outsourcedOnly (currentSentenceId ?sentence-id))
+      (uninferredSentence (ist-Information (UserContextFn ?user) (majorInSchool ?user ?major)))
+      (uninferredSentence (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade)))
       ;;; suggestions are grabbed from horn clauses.
       (ist-Information ?dcase
         (detectingUserRequest ?sentence-id ?request))
@@ -139,6 +149,21 @@
   (actionSequence
    (TheList
     (doSayUtterance ?system-utterance ?utterance-string)))))
+
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (outsourcedOnly (currentSentenceId ?sentence-id))
+      (ist-Information (UserContextFn ?user) (majorInSchool ?user ?major))
+      (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade))
+      ;;; suggestions are grabbed from horn clauses.
+      (ist-Information ?dcase
+        (detectingUserRequest ?sentence-id ?request)))
+ (methodForAction
+  (gatherResearchInterests ?sid ?dcase)
+  (actionSequence
+   (TheList
+    (doAgentPlan (recommendToUser))))))
 
 
 (isa UserContextFn UnaryFunction)
@@ -171,6 +196,7 @@
       (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade))))
     (doSayUtterance ?system-utterance ?utterance-string)))))
 
+;;; Triggered by recommendation part: "I want to find a research group."
 (preconditionForMethod
  (and (newReifiedUtterance ?system-utterance)
       (currentUser ?user)
@@ -194,7 +220,6 @@
      (TheSet
       (ist-Information (UserContextFn ?user) (majorInSchool ?user (MajorFn ?major)))
       (ist-Information (UserContextFn ?user) (yearOfGrade ?user ?grade))))
-    ;(doSayUtterance ?system-utterance ?utterance-string)
     (doAgentPlan (recommendToUser))))))
 
 (isa recommendToUser ComplexActionPredicate)
@@ -203,20 +228,41 @@
 (preconditionForMethod
  (and (newReifiedUtterance ?system-utterance)
       (currentUser ?user)
+      (uninferredSentence (ist-Information (UserContextFn ?user) (dislikeSkill ?user ?skill)))
+      (uninferredSentence (ist-Information (UserContextFn ?user) (hasSkill ?user ?skill)))
       (recommendUser ?user ?result-recommendation)
-      (extractResearchAreaResult ?result-recommendation ?research-area)
+      (extractResearchAreaResult ?user ?result-recommendation ?research-area)
       (formattedContentString
-       "Ok, store ur info. And based on previous students' data, I would recommend ~a group. Anything else I can help?" 
+       "Ok, store ur info. And based on previous students' data, I would recommend these ~a group. 
+       You can provide more information so that I can better assist you. Anything else I can help?" 
        (TheList ?research-area) ?utterance-string))
  (methodForAction
   (recommendToUser)
   (actionSequence
    (TheList
-    (doRecord 
-     (ist-Information (UserContextFn ?user) (preferResearchArea ?user ?research-area)))
+    ;;; if user doesn't provide detailed information, we might simply return a set of possible group
+    ;;; and do not record it...
+    ;(doRecord 
+    ; (ist-Information (UserContextFn ?user) (preferResearchArea ?user ?research-area)))
     (doSayUtterance ?system-utterance ?utterance-string)))))
 
-;;; DIY processUserUtterance for Kiosk
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      ;(ist-Information (UserContextFn ?user) (dislikeSkill ?user ?skill))
+      (ist-Information (UserContextFn ?user) (hasSkill ?user ?skill))
+      (recommendedGroup ?group ?user)
+      (formattedContentString
+       "Ok, recommend ~a group based on your preference. Anything else I can help?" 
+       (TheList ?group) ?utterance-string))
+ (methodForAction
+  (recommendToUser)
+  (actionSequence
+   (TheList
+    (doRecord 
+     (ist-Information (UserContextFn ?user) (preferResearchArea ?user ?group)))
+    (doSayUtterance ?system-utterance ?utterance-string)))))
+
 (preconditionForMethod
  (and (kioskFriendActive)
       (outsourcedOnly (currentSentenceId ?sid))
@@ -255,11 +301,27 @@
   (answerQuestionViaEEs ?dcase)
   (actionSequence
    (TheList
-    ;;; TODO: NF part
-    ;;; TODO: store them inside user's mt...
     ;(doAgentPlan (endKioskFriend))
     (doRecord 
-     (ist-Information (UserContextFn ?user) (preferResearchArea ?group-name)))
+     (ist-Information (UserContextFn ?user) (preferResearchArea ?user ?group-name)))
     (doRecord (kioskFriendActive))
     (doSayUtterance ?system-utterance ?utterance-string)))))
+
+;;; added 06/09/2020, to capture user skill preference
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      (currentUser ?user)
+      (outsourcedOnly (currentSentenceId ?sentence-id))
+      (ist-Information ?dcase
+        (recordUserPreference ?sentence-id ?skill ?likeordislike))
+      (formattedContentString
+       "Okay, stored your preference. Anything else I can help?" (TheList) ?utterance-string))
+ (methodForAction
+  (gatherResearchInterests ?sid ?dcase)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information (UserContextFn ?user) (?likeordislike ?user ?skill)))
+    (doSayUtterance ?system-utterance ?utterance-string)))))
+      
     

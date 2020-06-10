@@ -1,14 +1,4 @@
-;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
-;;;; ---------------------------------------------------------------------------
-;;;; File name: kiosk_NF_basic_user_info.krf
-;;;;    System: Companions
-;;;;    Author: Chenghong Lin
-;;;;   Created: May 21, 2020 11:36:17
-;;;;   Purpose: 
-;;;; ---------------------------------------------------------------------------
-;;;;  $LastChangedDate: 2018-09-27 12:08:59 -0500 (Thu, 27 Sep 2018) $
-;;;;  $LastChangedBy: usher $
-;;;; ---------------------------------------------------------------------------
+
 
 ;(in-microtheory KioskFriendBasicInfoMt)
 (in-microtheory InterstellarTrader-NFMt)

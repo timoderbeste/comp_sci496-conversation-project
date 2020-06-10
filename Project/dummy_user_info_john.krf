@@ -8,8 +8,5 @@
 
 (yearOfGrade john Senior-Student)
 
-(courseTaken john COMP_SCI-371-KnowledgeRepresentationAndReasoning)
-
+;;; newly added
 (hasSkill john Splicing-Electrical)
-(hasSkill john ProgrammingAComputer)
-(dislikeSkill john DoingMath)

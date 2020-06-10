@@ -1,0 +1,65 @@
+(in-microtheory InterstellarTrader-NFMt)
+
+;(in-microtheory KioskFriendMt)
+
+(queryForInterpretation 0
+                        (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                                           ?skills
+                                           GrabUserSkillEvent))
+
+(isa recordUserPreference Predicate)
+(arity recordUserPreference 3)
+(isa sentenceIndicatesDislike Predicate)
+(arity sentenceIndicatesDislike 1)
+(isa sentenceIndicatesLike Predicate)
+(arity sentenceIndicatesLike 1)
+(isa sentenceIndicatesSkill Predicate)
+(arity sentenceIndicatesSkill 2)
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?skills GrabUserSkillEvent)
+     (recordUserPreference ?sid ?skills ?likeordislike)
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (recordUserPreference ?sid ?skills ?likeordislike))))
+
+(<== (recordUserPreference ?sid ?skills ?likeordislike)
+     (ist-Information (DrsCaseFn ?sid)
+       (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (contextIndependentDrsFor ?sdrs-id ?sid))
+     (sentenceIndicatesDislike ?sdrs-id)
+     (sentenceIndicatesSkill ?sdrs-id ?skills)
+     (unifies ?likeordislike dislikeSkill))
+
+(<== (sentenceIndicatesDislike ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?dislike-var (ExperiencingEmotionFn Dislike))))
+
+(<== (sentenceIndicatesSkill ?sdrs-id ?skills)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?skill-var Splicing-Electrical))
+     (unifies ?skills Splicing-Electrical))
+
+(<== (recordUserPreference ?sid ?skills ?likeordislike)
+     (ist-Information (DrsCaseFn ?sid)
+       (discourseCaseForDrs ?dcase ?sid))
+     (ist-Information ?dcase (contextIndependentDrsFor ?sdrs-id ?sid))
+     (sentenceIndicatesLike ?sdrs-id)
+     (sentenceIndicatesSkill ?sdrs-id ?skills)
+     (unifies ?likeordislike hasSkill))
+
+(<== (sentenceIndicatesLike ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?like-var (ExperiencingEmotionFn Like))))
+
+(<== (sentenceIndicatesSkill ?sdrs-id ?skills)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?do-var SolvingAProblem))
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (properNameReference Mathematics))
+     (unifies ?skills DoingMath))
+
+(<== (sentenceIndicatesSkill ?sdrs-id ?skills)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?comp-var ComputerProgram-CW))
+     (unifies ?skills ProgrammingAComputer))

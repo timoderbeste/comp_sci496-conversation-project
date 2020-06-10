@@ -5,4 +5,6 @@
 (majorInSchool PeterClark (MajorFn ComputerScience))
 (preferResearchArea PeterClark NUCognitiveSystems)
 (yearOfGrade PeterClark Junior-Student)
-(courseTaken PeterClark COMP_SCI-349-MachineLearning)
+
+;;; newly added
+(hasSkill PeterClark ProgrammingAComputer)
